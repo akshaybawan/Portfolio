@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Options Premium Calculator — Case Study | Akshay Bawankule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="../index.html">AB<span>.</span>portfolio</a>
+    <div class="navlinks">
+      <a href="../index.html">&larr; Back to portfolio</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero cs-header">
+  <div class="wrap">
+    <a class="cs-back" href="../index.html">&larr; all projects</a>
+    <div class="cs-status-pill"><span class="dot"></span>SHIPPED &middot; PACKAGED FOR ANDROID (TWA)</div>
+    <h1 class="cs-title">Options Premium Calculator</h1>
+    <p class="cs-subtitle">A Greeks-aware TP/SL calculator for NSE options trading &mdash; converts spot-price levels into the actual option premium to set on your broker screen, published as a PWA and packaged for Android via TWA.</p>
+    <div class="cs-meta-row">
+      <div><b>ROLE</b> &nbsp;Solo developer</div>
+      <div><b>STACK</b> &nbsp;Firebase &middot; JavaScript &middot; PWA &middot; TWA (Android)</div>
+      <div><b>VALIDATED AGAINST</b> &nbsp;Rules-based backtested strategy framework</div>
+    </div>
+    <div class="cs-hero-fig">
+      <img src="../assets/options-calculator/calculator.jpg" alt="Options Premium Calculator results screen showing SL1, SL2, TP1, TP2 levels with P&L and R:R ratio">
+    </div>
+  </div>
+</header>
+
+<section class="cs-section" id="problem">
+  <div class="wrap">
+    <div class="eyebrow">01 &mdash; The Problem</div>
+    <h2 class="section-title">Spot moves aren't premium moves</h2>
+    <p>Trading NSE options intraday means setting stop-loss and target levels before every trade &mdash; but a broker's chart shows spot price, not option premium, and the two don't move 1:1. A 0.5% move in the underlying can be a 15% move in the premium depending on Delta, and that relationship itself bends with Gamma as the move gets larger. Doing that conversion in your head, mid-trade, under time pressure, is exactly the kind of arithmetic that produces costly mistakes.</p>
+    <p>I built this to do the conversion instantly: enter the trade setup once, get back the exact premium values to place as SL and target orders.</p>
+  </div>
+</section>
+
+<section class="cs-section" id="product">
+  <div class="wrap">
+    <div class="eyebrow">02 &mdash; The Product</div>
+    <h2 class="section-title">Enter the trade once, get every level</h2>
+    <p>Spot price, entry premium, lot size, and optional Greeks go in. Four actionable levels come out &mdash; each with the exact premium to set, the corresponding spot level, live P&amp;L at that lot size, and risk:reward against the hard stop.</p>
+
+    <div class="cs-screens-grid" style="grid-template-columns:repeat(3,1fr);">
+      <figure>
+        <img src="../assets/options-calculator/settings.jpg" alt="Settings drawer showing configurable SL1, SL2, TP1, TP2 percentages and default lot size">
+        <figcaption>Settings &mdash; SL/TP defaults saved once, applied to every trade</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/options-calculator/averaging.jpg" alt="Position average calculator with multiple entry rows and a running average price, quantity, and amount">
+        <figcaption>Position Average &mdash; for pyramiding into a position across multiple entries</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/options-calculator/calculator.jpg" alt="Full results view">
+        <figcaption>Full results &mdash; SL1 (alert), SL2 (hard stop), TP1, TP2</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="cs-section" id="engineering">
+  <div class="wrap">
+    <div class="eyebrow">03 &mdash; Engineering</div>
+    <h2 class="section-title">Three tiers of premium estimation</h2>
+    <p>The calculator escalates through three estimation methods depending on what the trader has on hand at that moment &mdash; it never blocks on missing data, it just gets less precise.</p>
+    <ul class="cs-decisions">
+      <li><b>Proportional estimate (no Greeks):</b> premium is scaled by the spot's percentage move, direction-flipped for puts &mdash; a usable fallback when Delta isn't known.</li>
+      <li><b>Delta-adjusted:</b> premium change = Delta &times; spot move. Puts get Delta's sign flipped automatically so the trader can enter it as the positive number their broker screen shows.</li>
+      <li><b>Delta + Gamma adjusted:</b> adds <code>0.5 &times; Gamma &times; move&sup2;</code> &mdash; a second-order convexity term, so premium accelerates correctly for larger moves instead of tracking Delta linearly all the way out.</li>
+    </ul>
+    <p>Every result is labelled with which tier produced it &mdash; "Proportional estimate," "Delta adjusted," or "Delta+Gamma adjusted" &mdash; so the trader always knows how much to trust the number.</p>
+
+    <h3 class="subhead">Two stops, two targets, one hard number for R:R</h3>
+    <p>SL1 is a trail/alert zone; SL2 is the hard exit. Both targets' risk:reward ratios are computed against SL2 specifically, not SL1 &mdash; a deliberately conservative choice, since sizing a trade against the softer stop would overstate the reward.</p>
+  </div>
+</section>
+
+<section class="cs-section" id="validation">
+  <div class="wrap">
+    <div class="eyebrow">04 &mdash; Validation</div>
+    <h2 class="section-title">Checked against a real strategy, not just the math</h2>
+    <p>Before shipping, the entry and exit logic was validated against a systematic, rules-based intraday framework &mdash; built on volume profile and EMA crossover signals &mdash; and backtested rather than trusted on formulas alone. The calculator's output only matters if the levels it recommends actually hold up against how price behaves in practice.</p>
+  </div>
+</section>
+
+<section class="cs-section" id="distribution">
+  <div class="wrap">
+    <div class="eyebrow">05 &mdash; Distribution</div>
+    <h2 class="section-title">PWA first, Android app second</h2>
+    <p>Published as a Firebase-hosted PWA &mdash; installable, offline-capable via service worker &mdash; then packaged as a Trusted Web Activity for direct Android distribution, so it runs as a standalone app without a WebView wrapper or a rebuild for every change to the web app underneath it.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap cs-footer-nav">
+    <a class="cs-back" href="../index.html">&larr; Back to all projects</a>
+    <div class="foot-links">
+      <a href="mailto:akshay.bawankule@yahoo.in">Email</a>
+      <a href="tel:+918805380153">Call</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

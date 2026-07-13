@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Samjhdari Suraksha — Case Study | Akshay Bawankule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="../index.html">AB<span>.</span>portfolio</a>
+    <div class="navlinks">
+      <a href="../index.html">&larr; Back to portfolio</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero cs-header">
+  <div class="wrap">
+    <a class="cs-back" href="../index.html">&larr; all projects</a>
+    <div class="cs-status-pill"><span class="dot"></span>MVP LIVE &amp; TESTED &middot; PENDING META VERIFICATION</div>
+    <h1 class="cs-title">Samjhdari Suraksha</h1>
+    <p class="cs-subtitle">समझदारी सुरक्षा — a WhatsApp-native AI chatbot guiding underserved, uninsured Indians to term life insurance in their own language, through trusted community agents. IRDAI-guidance-only. BITSoM capstone, Team 6.</p>
+    <div class="cs-meta-row">
+      <div><b>ROLE</b> &nbsp;Solo PM &amp; technical lead</div>
+      <div><b>TIMELINE</b> &nbsp;5-phase capstone, Dec 2025 &ndash; Jun 2026</div>
+      <div><b>STACK</b> &nbsp;FastAPI &middot; Python 3.11 &middot; Claude Haiku &middot; WhatsApp Business API</div>
+    </div>
+    <div class="cs-hero-fig">
+      <img src="../assets/samjhdari-suraksha/hero.jpg" alt="Samjhdari Suraksha capstone title slide — 650M+ uninsured Indians, MVP live and tested, ₹50K Cr market TAM">
+    </div>
+
+    <div class="cs-demo">
+      <div class="cs-demo-label"><span class="dot"></span>LIVE DEMO</div>
+      <div class="cs-demo-frame">
+        <iframe src="https://drive.google.com/file/d/1pwUkzimaiQoSK7LjThof6JwUreGkEqCZ/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="cs-caption">Full walkthrough of the WhatsApp bot, end to end &mdash; welcome, language selection, Learn path, and a Buy-path plan recommendation.</div>
+    </div>
+  </div>
+</header>
+
+<section class="cs-section" id="problem">
+  <div class="wrap">
+    <div class="eyebrow">01 &mdash; The Problem</div>
+    <h2 class="section-title">650 million Indians are uninsured &mdash; not for lack of demand</h2>
+    <p>How can AI improve financial inclusion by helping underserved, underinsured individuals understand, choose, and act on term insurance &mdash; through personalised, trustworthy, simple guidance, without requiring financial knowledge or complex infrastructure? That was the brief I set myself after advising retail clients on term insurance at HDFC and watching the same objections repeat: confusion, distrust, and a product that assumed a level of financial literacy most buyers don't have.</p>
+
+    <div class="cs-stat-row">
+      <div class="cs-stat"><div class="num">650M+</div><div class="lbl">Uninsured Indians</div></div>
+      <div class="cs-stat"><div class="num">3.2%</div><div class="lbl">GDP insurance penetration</div></div>
+      <div class="cs-stat"><div class="num">&#8377;50K Cr</div><div class="lbl">Market TAM</div></div>
+    </div>
+
+    <h3 class="subhead">Four structural barriers</h3>
+    <div class="cs-pillar-grid">
+      <div class="cs-pillar"><div class="t">Financial literacy &amp; misconceptions</div><div class="d">Premium is widely misunderstood as a "loss" rather than a necessary protective shield.</div></div>
+      <div class="cs-pillar"><div class="t">Language barrier</div><div class="d">Guidance is English-first, but 80%+ of the target users speak Hindi or a regional language.</div></div>
+      <div class="cs-pillar"><div class="t">Digital literacy friction</div><div class="d">Existing apps need 10+ steps and PDFs; this audience already lives on WhatsApp voice notes.</div></div>
+      <div class="cs-pillar"><div class="t">Trust deficits</div><div class="d">Jargon-heavy policy wording and a history of mis-selling create a structural wall of mistrust.</div></div>
+    </div>
+
+    <p style="margin-top:26px;">I validated this against secondary research rather than assumption &mdash; app store reviews on Policybazaar, and threads on r/IndiaInvestments and r/personalfinanceindia surfaced a consistent pattern: agents pushing savings policies instead of term cover, unclear exclusions, and claim processes nobody could explain in plain language.</p>
+  </div>
+</section>
+
+<section class="cs-section" id="research">
+  <div class="wrap">
+    <div class="eyebrow">02 &mdash; Research</div>
+    <h2 class="section-title">Voice of the customer</h2>
+    <p>Five structured interviews using the Jobs-to-be-Done framework, on top of the secondary research, surfaced four themes that shaped every downstream decision:</p>
+    <ul class="cs-decisions">
+      <li><b>Trust deficit</b> &mdash; past agent fraud means radical transparency has to be the baseline, not a feature. The bot must never ask for cash or Aadhaar upfront.</li>
+      <li><b>Awareness gap</b> &mdash; many users already hold a PMJJBY cover but don't know it, and can't explain their own policy terms or claim process.</li>
+      <li><b>Nominee blindspot</b> &mdash; women are routinely excluded from insurance decisions and left stranded at claim time with no guidance.</li>
+      <li><b>B2B2C demand</b> &mdash; insurance agents spend 30+ minutes per client on basics and want a tool that guides clients, not one that replaces them.</li>
+    </ul>
+
+    <h3 class="subhead">Target personas</h3>
+    <div class="cs-persona-grid">
+      <div class="cs-persona-card">
+        <div class="name">Ramesh</div>
+        <div class="role">Daily wage &middot; 38</div>
+        <ul>
+          <li>&#8377;8k&ndash;12k/month cash, irregular</li>
+          <li>4 dependents &mdash; wife, kids, mother</li>
+          <li>WhatsApp voice notes only</li>
+          <li>Deep agent distrust after fraud</li>
+        </ul>
+        <div class="quote">JTBD: understand without being sold to.<br>"Mujhe seedha aur simple batao, koi plan kharidne ka pressure nahi."</div>
+      </div>
+      <div class="cs-persona-card">
+        <div class="name">Kavitha</div>
+        <div class="role">Street vendor &middot; 31</div>
+        <ul>
+          <li>&#8377;6k&ndash;9k/month cash, no payslip</li>
+          <li>3 dependents, zero safety net</li>
+          <li>Excluded by income-proof requirements</li>
+        </ul>
+        <div class="quote">JTBD: eligible without income documents.<br>"Main sabzi bechti hoon &mdash; kya income proof dungi?"</div>
+      </div>
+      <div class="cs-persona-card">
+        <div class="name">Salim</div>
+        <div class="role">Gig rider &middot; 28</div>
+        <ul>
+          <li>&#8377;14k&ndash;20k variable gig income</li>
+          <li>Active smartphone user, knows UPI</li>
+          <li>Invisible to traditional agents</li>
+        </ul>
+        <div class="quote">JTBD: gig coverage explained in Hindi.<br>"Koi agent mere jaise ke paas nahi aata."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cs-section" id="design">
+  <div class="wrap">
+    <div class="eyebrow">03 &mdash; Design</div>
+    <h2 class="section-title">From wireframe to shipped product</h2>
+
+    <h3 class="subhead">Low-fidelity wireframe</h3>
+    <p>Before writing a line of backend code, I mapped the full 8-step conversation as an interactive HTML wireframe &mdash; welcome &rarr; language &rarr; intent &rarr; learn/buy branch &rarr; recommendation &rarr; agent handoff &mdash; to pressure-test WhatsApp's List Message constraints (title &le;24 characters, description &le;72) before they became a build-time surprise.</p>
+    <figure class="cs-figure">
+      <img src="../assets/samjhdari-suraksha/wireframe.jpg" alt="Interactive HTML wireframe of the Samjhdari Suraksha WhatsApp flow, step 1 of 8: welcome message">
+      <figcaption class="cs-caption">Fig. &mdash; interactive wireframe, step 1 of 8 (welcome). Each step was clickable and annotated with the exact WhatsApp message format it maps to.</figcaption>
+    </figure>
+
+    <h3 class="subhead">Shipped product</h3>
+    <p>The same flow, live on WhatsApp, in Marathi &mdash; language confirmation, the Learn path's dynamic topic menu, and a Buy-path outcome showing three ranked plans with CSR ratios after the bot collects income and expense data conversationally.</p>
+    <div class="cs-screens-grid">
+      <figure>
+        <img src="../assets/samjhdari-suraksha/screen-2.jpg" alt="WhatsApp screenshot: welcome message with language selection list">
+        <figcaption>Welcome + language selection (WhatsApp List Message)</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/samjhdari-suraksha/screen-3.jpg" alt="WhatsApp screenshot: Marathi selected, quoted reply confirmation">
+        <figcaption>Language confirmed &mdash; Marathi selected via quoted reply</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/samjhdari-suraksha/screen-4.jpg" alt="WhatsApp screenshot: dynamic topic menu for the Learn path">
+        <figcaption>Intent picked &rarr; dynamic topic menu for the Learn path</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/samjhdari-suraksha/screen-1.jpg" alt="WhatsApp screenshot: three ranked term insurance plans with CSR shown in Marathi">
+        <figcaption>Buy path outcome &mdash; three ranked plans with CSR, in Marathi</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="cs-section" id="architecture">
+  <div class="wrap">
+    <div class="eyebrow">04 &mdash; Architecture</div>
+    <h2 class="section-title">A dual-call agentic pipeline</h2>
+    <p>A WhatsApp message hits a Meta webhook, which lands on a FastAPI server backed by a session store. The server fires two concurrent Claude Haiku calls &mdash; one explains the concept in-language, the other generates the next set of dynamic follow-up options &mdash; before either touches the hardcoded 8-plan-plus-CSR dataset that ultimately hands off to a licensed agent.</p>
+    <figure class="cs-figure">
+      <img src="../assets/samjhdari-suraksha/architecture.jpg" alt="Agentic architecture diagram: WhatsApp user, Meta webhook, FastAPI server, dual Claude Haiku calls, hardcoded plans, agent handover">
+      <figcaption class="cs-caption">Fig. &mdash; primary-call / options-call dual architecture, with the session store keeping conversation state between turns.</figcaption>
+    </figure>
+
+    <h3 class="subhead">Five engineering decisions that define the product</h3>
+    <ul class="cs-decisions">
+      <li><b>Model choice:</b> Claude Haiku &mdash; roughly 10&times; better multilingual instruction-following than Groq/Llama in testing.</li>
+      <li><b>Dual-call design:</b> one AI call explains; a separate, concurrent call generates dynamic follow-up options, so the user is never staring at a static menu.</li>
+      <li><b>Triple-lock language enforcement:</b> system prompt + per-message injection + code-level drift detection, so a Hindi conversation can't quietly slip into English mid-thread.</li>
+      <li><b>Temperature 0.3:</b> prevents hallucination; every plan premium and CSR ratio is hardcoded, so Claude cannot invent a number.</li>
+      <li><b>&asymp;&#8377;0.50 per session:</b> conversation history capped at 8 messages, on the lowest-cost Anthropic model &mdash; the unit economics have to work at 50,000 MAU.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="cs-section" id="business">
+  <div class="wrap">
+    <div class="eyebrow">05 &mdash; Business Model</div>
+    <h2 class="section-title">Free to the user, funded by distribution partners</h2>
+    <p>The end user pays nothing. Insurers, NBFCs, and agent networks pay a flat SaaS fee plus a referral fee per completed policy &mdash; deliberately flat rather than value-based, so the product has zero incentive to push more expensive plans over the right one.</p>
+    <div class="cs-stat-row">
+      <div class="cs-stat"><div class="num">&lt;&#8377;40</div><div class="lbl">CAC via warm agent intro</div></div>
+      <div class="cs-stat"><div class="num">&asymp;&#8377;0.50</div><div class="lbl">Cost per AI session</div></div>
+      <div class="cs-stat"><div class="num">&gt;75%</div><div class="lbl">Gross margin at scale</div></div>
+      <div class="cs-stat"><div class="num">&#8377;40L+</div><div class="lbl">Year-1 ARR target</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="cs-section" id="compliance">
+  <div class="wrap">
+    <div class="eyebrow">06 &mdash; Compliance &amp; Ethics</div>
+    <h2 class="section-title">Guidance only, by design</h2>
+    <p>The bot never handles payment or policy issuance &mdash; a licensed agent always completes the transaction. No Aadhaar or biometric data is collected by the bot itself, and the product is built to be compliant with India's Digital Personal Data Protection Act from day one, not retrofitted later.</p>
+    <ul class="cs-decisions">
+      <li><b>No hallucinations:</b> all 8 plan premiums and CSR ratios are hardcoded in the system prompt; temperature 0.3 keeps responses factual and consistent, with a weekly red-team audit before each release.</li>
+      <li><b>Nominee protection:</b> a mandatory education module collects nominee details upfront &mdash; 4 of 5 interview families had this exact gap.</li>
+      <li><b>Radical inclusion:</b> PMJJBY (&#8377;36/month) is auto-recommended for users declaring income under &#8377;8,000, and the bot runs on WhatsApp itself &mdash; no new app to install.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="cs-section" id="status">
+  <div class="wrap">
+    <div class="eyebrow">07 &mdash; Status &amp; Roadmap</div>
+    <h2 class="section-title">Where it stands</h2>
+    <p>The EN/HI/MR WhatsApp bot is live, the LEARN and BUY flows are complete, and agent handoff works end to end. The one open blocker is Meta Business Verification &mdash; once that clears, the product is ready for its first real cohort.</p>
+
+    <div class="cs-roadmap">
+      <div class="col">
+        <h4>Now &middot; Months 0&ndash;3</h4>
+        <ul>
+          <li>EN/HI/MR WhatsApp bot live</li>
+          <li>LEARN + BUY flows complete</li>
+          <li>Agent handoff working</li>
+          <li>Meta Business Verification pending</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>Next &middot; Months 3&ndash;9</h4>
+        <ul>
+          <li>Voice note input via Whisper API</li>
+          <li>Aadhaar OTP eKYC on WhatsApp</li>
+          <li>Expand to Tamil + Telugu</li>
+          <li>UPI payment link, partner analytics dashboard</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>Later &middot; Months 9&ndash;18</h4>
+        <ul>
+          <li>Agentic claims navigator for nominees</li>
+          <li>Health + accident cover expansion</li>
+          <li>NBFC credit-linked insurance at disbursal</li>
+          <li>IVR / SMS fallback, CSC operator rollout</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="cs-pullquote">"650 million Indians already have WhatsApp. They just needed a product designed for them &mdash; and now it exists."</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap cs-footer-nav">
+    <a class="cs-back" href="../index.html">&larr; Back to all projects</a>
+    <div class="foot-links">
+      <a href="mailto:akshay.bawankule@yahoo.in">Email</a>
+      <a href="tel:+918805380153">Call</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rice Mill Manager — Case Study | Akshay Bawankule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="../index.html">AB<span>.</span>portfolio</a>
+    <div class="navlinks">
+      <a href="../index.html">&larr; Back to portfolio</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero cs-header">
+  <div class="wrap">
+    <a class="cs-back" href="../index.html">&larr; all projects</a>
+    <div class="cs-status-pill"><span class="dot"></span>LIVE &middot; DAILY USE ACROSS 2 FACILITIES</div>
+    <h1 class="cs-title">Rice Mill Manager</h1>
+    <p class="cs-subtitle">A mobile-first procurement &amp; inventory PWA that replaced manual ledger tracking across two rice mills &mdash; built solo, end to end, with real-time cross-facility sync on Firebase.</p>
+    <div class="cs-meta-row">
+      <div><b>ROLE</b> &nbsp;Sole developer &amp; product owner</div>
+      <div><b>STACK</b> &nbsp;Firebase &middot; Firestore &middot; JavaScript &middot; PWA</div>
+      <div><b>USERS</b> &nbsp;Mill owners at ARI &amp; Dharmaraj Rice Mill (DRM)</div>
+    </div>
+    <div class="cs-hero-fig">
+      <img src="../assets/rice-mill-manager/dashboard.jpg" alt="Rice Mill Manager dashboard showing the Lot Cycle Tracker, DO Status, and Allotment Status cards">
+    </div>
+  </div>
+</header>
+
+<section class="cs-section" id="problem">
+  <div class="wrap">
+    <div class="eyebrow">01 &mdash; The Problem</div>
+    <h2 class="section-title">One procurement cycle, two mills, zero visibility</h2>
+    <p>Running ARI and operating DRM as a partner meant the same paddy-to-rice procurement cycle had to be tracked twice &mdash; on paper and in scattered Excel sheets, with no way to see either mill's position at a glance. Every stage of the cycle depended on the previous one balancing correctly, and nothing caught a mismatch until reconciliation day.</p>
+
+    <h3 class="subhead">The pipeline, in plain terms</h3>
+    <div class="cs-pillar-grid">
+      <div class="cs-pillar"><div class="t">Security</div><div class="d">A cash deposit with the government that authorizes a fixed number of paddy procurement lots.</div></div>
+      <div class="cs-pillar"><div class="t">DO (Delivery Order)</div><div class="d">Issued against a security (or a prior LD) to actually procure paddy from a godown.</div></div>
+      <div class="cs-pillar"><div class="t">Allotment</div><div class="d">Once paddy is milled, the resulting rice is allotted to a godown for dispatch.</div></div>
+      <div class="cs-pillar"><div class="t">LD (Lot Delivery)</div><div class="d">The rice is dispatched to the customer, closing that lot's cycle and freeing it for a new DO.</div></div>
+    </div>
+    <p style="margin-top:24px;">Every lot has to be somewhere in that chain at all times. The manual process made it almost impossible to answer a simple question: of the lots we put security down for, how many are stuck, and where?</p>
+  </div>
+</section>
+
+<section class="cs-section" id="product">
+  <div class="wrap">
+    <div class="eyebrow">02 &mdash; The Product</div>
+    <h2 class="section-title">A dashboard that answers "where's the gap?"</h2>
+    <p>The Lot Cycle Tracker is the core screen: it accounts for every security lot across six pipeline stages and flags the exact count if the numbers don't reconcile, instead of leaving that discovery for manual audit day.</p>
+
+    <div class="cs-screens-grid">
+      <figure>
+        <img src="../assets/rice-mill-manager/do-list.jpg" alt="Delivery Orders list showing period filter, sort, and per-DO procurement status">
+        <figcaption>Delivery Orders &mdash; filterable by season/year, sorted latest first</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/rice-mill-manager/allotment.jpg" alt="Allotment page">
+        <figcaption>Allotment &mdash; rice godown assignment after milling</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/rice-mill-manager/ld.jpg" alt="Lot Delivery pipeline page">
+        <figcaption>LD pipeline &mdash; dispatch status per lot</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/rice-mill-manager/add-do.jpg" alt="Add Delivery Order form with godown, quantity, and bag-type fields">
+        <figcaption>Add DO &mdash; the actual data-entry form, built for one-handed mobile use</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="cs-section" id="incident">
+  <div class="wrap">
+    <div class="eyebrow">03 &mdash; The Incident</div>
+    <h2 class="section-title">The night the data silently stopped saving</h2>
+    <p>The app was being used from both a laptop and a phone. At some point, entries stopped persisting &mdash; with no error, no warning, just data that quietly wasn't there the next time the app opened. Tracing it down surfaced two separate bugs stacked on top of each other.</p>
+    <ul class="cs-decisions">
+      <li><b>Root cause 1 &mdash; a Claude.ai-only API in production:</b> an early build used <code>window.storage</code> for persistence, which works inside Claude's own environment but doesn't exist on a real Firebase-hosted domain. Every save and load was failing silently the moment the app left that environment.</li>
+      <li><b>Root cause 2 &mdash; a sync race condition:</b> on startup, stale local data could overwrite newer data already sitting in the cloud, so even the writes that did succeed could get clobbered a moment later.</li>
+      <li><b>The fix:</b> replaced every <code>window.storage</code> call with real <code>localStorage</code>, and added a <code>_cloudLoaded</code> flag that blocks any push to Firestore until cloud data has actually been received &mdash; making Firestore the single source of truth instead of a sync partner two devices could race against.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="cs-section" id="logic">
+  <div class="wrap">
+    <div class="eyebrow">04 &mdash; Domain Logic</div>
+    <h2 class="section-title">Where every lot is, accounted for</h2>
+    <p>The reconciliation rule the tracker enforces: total security lots must equal the sum of six mutually exclusive states. If they don't match, the exact discrepancy is surfaced rather than a generic warning.</p>
+    <ul class="cs-decisions">
+      <li><b>1. Security</b> &mdash; DO not issued yet</li>
+      <li><b>2. DO issued</b> &mdash; unprocured</li>
+      <li><b>3. Procured</b> &mdash; allotment pending</li>
+      <li><b>4. Allotment</b> &mdash; remaining, not yet dispatched</li>
+      <li><b>5. LD pending</b> &mdash; no LD number assigned yet</li>
+      <li><b>6. LD submitted</b> &mdash; awaiting a new DO to restart the cycle</li>
+    </ul>
+    <p>A quieter bug lived here too: older DOs created before a <code>refType</code> field existed had it as <code>undefined</code>, and a strict equality filter (<code>refType==='security'</code>) silently excluded every one of them from the tracker. The fix was treating a missing <code>refType</code> as its original default rather than as "not security" &mdash; a reminder that schema changes need to account for the data that predates them.</p>
+  </div>
+</section>
+
+<section class="cs-section" id="tooling">
+  <div class="wrap">
+    <div class="eyebrow">05 &mdash; Auxiliary Tooling</div>
+    <h2 class="section-title">Closing the loop with the government portal</h2>
+    <p>Procurement data ultimately has to be filed on <em>mspbeam.in</em>, the government mandi portal &mdash; a separate system with its own repetitive form for every truck transfer. I built a companion Tampermonkey userscript that autofills the recurring driver, vehicle, and bag-type fields from saved profiles, cutting a multi-field manual entry down to one click per shipment.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap cs-footer-nav">
+    <a class="cs-back" href="../index.html">&larr; Back to all projects</a>
+    <div class="foot-links">
+      <a href="mailto:akshay.bawankule@yahoo.in">Email</a>
+      <a href="tel:+918805380153">Call</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
