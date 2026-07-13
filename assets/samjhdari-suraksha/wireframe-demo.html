@@ -1,0 +1,601 @@
+
+<style>
+:root {
+  --wa-bg: #e5ddd5;
+  --wa-bubble-out: #dcf8c6;
+  --wa-bubble-in: #ffffff;
+  --wa-header: #075e54;
+  --wa-header-text: #ffffff;
+  --wa-input-bg: #f0f0f0;
+  --wa-list-border: #25d366;
+  --wa-green: #25d366;
+  --wa-dark-green: #075e54;
+  --wa-text: #111b21;
+  --wa-subtext: #667781;
+  --wa-time: #667781;
+  --wa-tick: #53bdeb;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Helvetica Neue', sans-serif; }
+
+.demo-wrap {
+  display: flex;
+  gap: 20px;
+  padding: 1rem 0;
+  align-items: flex-start;
+  max-width: 700px;
+}
+
+.phone-frame {
+  width: 320px;
+  min-width: 320px;
+  border-radius: 36px;
+  overflow: hidden;
+  border: 8px solid #1a1a1a;
+  box-shadow: 0 0 0 2px #333, 0 20px 60px rgba(0,0,0,0.3);
+  background: #1a1a1a;
+  position: relative;
+}
+
+.wa-header {
+  background: var(--wa-dark-green);
+  padding: 10px 14px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.wa-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #128c7e;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600; color: #fff;
+}
+.wa-header-info { flex: 1; }
+.wa-header-name { font-size: 15px; font-weight: 600; color: #fff; }
+.wa-header-status { font-size: 12px; color: rgba(255,255,255,0.7); }
+.wa-header-icons { display: flex; gap: 16px; }
+.wa-header-icons i { color: #fff; font-size: 18px; }
+
+.wa-chat-area {
+  background: var(--wa-bg);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b2bec3' fill-opacity='0.07'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  height: 460px;
+  overflow-y: auto;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.wa-chat-area::-webkit-scrollbar { width: 3px; }
+.wa-chat-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 3px; }
+
+.date-label {
+  text-align: center;
+  margin: 6px 0;
+}
+.date-label span {
+  background: rgba(255,255,255,0.75);
+  color: var(--wa-subtext);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.msg-row { display: flex; margin: 1px 0; }
+.msg-row.out { justify-content: flex-end; }
+.msg-row.in { justify-content: flex-start; }
+
+.bubble {
+  max-width: 240px;
+  padding: 6px 8px 4px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--wa-text);
+  position: relative;
+}
+.bubble.out {
+  background: var(--wa-bubble-out);
+  border-bottom-right-radius: 2px;
+}
+.bubble.in {
+  background: var(--wa-bubble-in);
+  border-bottom-left-radius: 2px;
+}
+.bubble .time-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 3px;
+  margin-top: 2px;
+}
+.bubble .time {
+  font-size: 10px;
+  color: var(--wa-time);
+}
+.bubble.out .ticks { color: var(--wa-tick); font-size: 12px; }
+
+.list-card {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 240px;
+  border: 1px solid #e5e5e5;
+  margin: 1px 0;
+}
+.list-card-header {
+  background: var(--wa-dark-green);
+  padding: 8px 12px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+.list-card-body {
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--wa-text);
+  line-height: 1.4;
+}
+.list-divider { height: 0.5px; background: #e5e5e5; margin: 0 10px; }
+.list-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  border-top: 0.5px solid #e5e5e5;
+  color: #0a7cff;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.list-option {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.1s;
+  border-radius: 0;
+}
+.list-option:hover { background: #f5f5f5; }
+.list-option-title { font-size: 13.5px; font-weight: 500; color: var(--wa-text); }
+.list-option-desc { font-size: 11.5px; color: var(--wa-subtext); margin-top: 1px; }
+
+.selected-option {
+  background: #e8f5e9;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: var(--wa-dark-green);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.wa-input-bar {
+  background: #f0f0f0;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.wa-input {
+  flex: 1;
+  background: #fff;
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--wa-text);
+  border: none;
+  outline: none;
+  font-family: inherit;
+}
+.wa-send-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--wa-dark-green);
+  border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.wa-send-btn i { color: #fff; font-size: 16px; }
+
+.typing-indicator {
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom-left-radius: 2px;
+}
+.typing-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #aaa;
+  animation: typingBounce 1.2s infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+
+.hidden { display: none !important; }
+
+.controls-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.controls-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.step-btn {
+  width: 100%;
+  padding: 9px 14px;
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-secondary);
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.step-btn:hover { background: var(--color-background-secondary); }
+.step-btn.active { border-color: #25d366; background: #e8f5e9; color: #075e54; }
+.step-btn i { font-size: 15px; opacity: 0.6; }
+.step-num {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--color-background-secondary);
+  font-size: 11px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.step-btn.active .step-num { background: var(--wa-green); color: #fff; }
+
+.info-box {
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  background: var(--color-background-secondary);
+}
+.info-box strong { color: var(--color-text-primary); font-weight: 500; }
+
+.reset-btn {
+  width: 100%;
+  padding: 8px;
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-tertiary);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.reset-btn:hover { background: var(--color-background-secondary); }
+</style>
+
+<h2 class="sr-only">Samjhdari Suraksha WhatsApp chatbot wireframe demo showing the full conversation flow</h2>
+
+<div class="demo-wrap">
+  <div>
+    <div class="phone-frame">
+      <div class="wa-header">
+        <div class="wa-avatar">SS</div>
+        <div class="wa-header-info">
+          <div class="wa-header-name">Samjhdari Suraksha</div>
+          <div class="wa-header-status" id="status-text">online</div>
+        </div>
+        <div class="wa-header-icons">
+          <i class="ti ti-phone" aria-hidden="true"></i>
+          <i class="ti ti-dots-vertical" aria-hidden="true"></i>
+        </div>
+      </div>
+
+      <div class="wa-chat-area" id="chat-area">
+        <div class="date-label"><span>Today</span></div>
+      </div>
+
+      <div class="wa-input-bar">
+        <i class="ti ti-mood-smile" style="font-size:22px;color:var(--wa-subtext)" aria-hidden="true"></i>
+        <input class="wa-input" id="user-input" placeholder="Type a message" readonly />
+        <button class="wa-send-btn" id="send-btn" aria-label="Send">
+          <i class="ti ti-send" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls-panel">
+    <div>
+      <div class="controls-title">Flow steps</div>
+      <div style="display:flex;flex-direction:column;gap:6px;" id="steps-list">
+        <button class="step-btn active" data-step="0" onclick="goToStep(0)">
+          <span class="step-num">1</span> Welcome message
+        </button>
+        <button class="step-btn" data-step="1" onclick="goToStep(1)">
+          <span class="step-num">2</span> Language select
+        </button>
+        <button class="step-btn" data-step="2" onclick="goToStep(2)">
+          <span class="step-num">3</span> Intent select
+        </button>
+        <button class="step-btn" data-step="3" onclick="goToStep(3)">
+          <span class="step-num">4</span> Learn path — AI explains
+        </button>
+        <button class="step-btn" data-step="4" onclick="goToStep(4)">
+          <span class="step-num">5</span> Follow-up options
+        </button>
+        <button class="step-btn" data-step="5" onclick="goToStep(5)">
+          <span class="step-num">6</span> Buy path — collect details
+        </button>
+        <button class="step-btn" data-step="6" onclick="goToStep(6)">
+          <span class="step-num">7</span> Plan recommendations
+        </button>
+        <button class="step-btn" data-step="7" onclick="goToStep(7)">
+          <span class="step-num">8</span> Agent handoff
+        </button>
+      </div>
+    </div>
+
+    <div class="info-box" id="step-info">
+      <strong>Step 1 — Welcome</strong><br>
+      Bot sends a greeting with language selection as a WhatsApp List Message. Title (24 chars max) + description (72 chars max) per row.
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">
+      <i class="ti ti-refresh" aria-hidden="true"></i> Reset demo
+    </button>
+  </div>
+</div>
+
+<script>
+const chat = document.getElementById('chat-area');
+const statusText = document.getElementById('status-text');
+
+const stepInfos = [
+  '<strong>Step 1 — Welcome</strong><br>Bot sends greeting + language list. WhatsApp List Message format: title ≤24 chars, description ≤72 chars.',
+  '<strong>Step 2 — Language selected</strong><br>User taps a language. Bot confirms and sends intent menu in the chosen language.',
+  '<strong>Step 3 — Intent selected</strong><br>User picks Learn / Buy / Ask. Bot routes to the correct path immediately.',
+  '<strong>Step 4 — Learn path</strong><br>Claude Haiku explains term insurance in the user\'s language. max_tokens=800, temp=0.3.',
+  '<strong>Step 5 — Dynamic follow-ups</strong><br>After every AI reply, a second Claude call picks 4 relevant seed questions + 1–2 contextual ones.',
+  '<strong>Step 6 — Buy path: data collection</strong><br>Bot asks 9 questions one-by-one: Name → Age → Profession → Dependents → Income → Loans → Obligations → Expenses → Budget.',
+  '<strong>Step 7 — Plan recommendations</strong><br>AI picks 3 best plans from 8 options based on collected profile. Shows premium, CSR, and buy link.',
+  '<strong>Step 8 — Agent handoff</strong><br>User confirms interest. Bot hands off to licensed IRDAI agent with full profile summary.'
+];
+
+function scrollBottom() {
+  setTimeout(() => { chat.scrollTop = chat.scrollHeight; }, 50);
+}
+
+function addMsg(html, type='in', delay=0) {
+  return new Promise(res => {
+    setTimeout(() => {
+      const row = document.createElement('div');
+      row.className = 'msg-row ' + type;
+      row.innerHTML = html;
+      chat.appendChild(row);
+      scrollBottom();
+      res();
+    }, delay);
+  });
+}
+
+function makeBubble(text, type, ticks=true) {
+  const tickHtml = type==='out' && ticks ? '<span class="ticks">✓✓</span>' : '';
+  return `<div class="bubble ${type}"><div>${text}</div><div class="time-row"><span class="time">10:${String(Math.floor(Math.random()*59)).padStart(2,'0')} AM</span>${tickHtml}</div></div>`;
+}
+
+function makeListCard(header, body, options, btnLabel='Choose an option') {
+  let opts = options.map((o,i) => `
+    <div class="list-option" onclick="selectOption(this, '${o.title}', ${o.step !== undefined ? o.step : 'null'})">
+      <div class="list-option-title">${o.title}</div>
+      <div class="list-option-desc">${o.desc}</div>
+    </div>
+    ${i < options.length-1 ? '<div class="list-divider"></div>' : ''}
+  `).join('');
+  return `<div class="list-card">
+    <div class="list-card-header">${header}</div>
+    <div class="list-card-body">${body}</div>
+    <div class="list-divider"></div>
+    ${opts}
+    <div class="list-btn"><i class="ti ti-list" aria-hidden="true"></i> ${btnLabel}</div>
+  </div>`;
+}
+
+function showTyping(ms=1200) {
+  statusText.textContent = 'typing...';
+  const row = document.createElement('div');
+  row.className = 'msg-row in';
+  row.id = 'typing-row';
+  row.innerHTML = `<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  chat.appendChild(row);
+  scrollBottom();
+  return new Promise(res => setTimeout(() => {
+    const t = document.getElementById('typing-row');
+    if(t) t.remove();
+    statusText.textContent = 'online';
+    res();
+  }, ms));
+}
+
+let currentStep = 0;
+
+function selectOption(el, title, nextStep) {
+  const card = el.closest('.list-card');
+  if(!card) return;
+  const row = card.closest('.msg-row');
+  if(!row) return;
+  row.innerHTML = makeBubble(`<span class="selected-option"><i class="ti ti-check" aria-hidden="true"></i> ${title}</span>`, 'out');
+  scrollBottom();
+  if(nextStep !== null && nextStep !== undefined) {
+    setTimeout(() => goToStep(nextStep), 500);
+  }
+}
+
+async function clearAndBuild(step) {
+  chat.innerHTML = '<div class="date-label"><span>Today</span></div>';
+  currentStep = step;
+  document.querySelectorAll('.step-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.step) === step);
+  });
+  document.getElementById('step-info').innerHTML = stepInfos[step];
+
+  if(step === 0) {
+    await showTyping(800);
+    const card = makeListCard(
+      '🌟 Samjhdari Suraksha',
+      'Namaste! I help you understand and buy term life insurance. Choose your language to begin.',
+      [
+        {title:'English', desc:'Continue in English', step:1},
+        {title:'हिंदी', desc:'हिंदी में जारी रखें', step:1},
+        {title:'मराठी', desc:'मराठीत पुढे जा', step:1},
+        {title:'Other / अन्य', desc:'Ask in any language', step:1},
+      ]
+    );
+    await addMsg(card, 'in');
+  }
+
+  else if(step === 1) {
+    await addMsg(makeBubble('<span class="selected-option"><i class="ti ti-check"></i> English</span>', 'out'));
+    await showTyping(900);
+    const card = makeListCard(
+      '📋 What would you like?',
+      'Great! I\'m here to help. What would you like to do today?',
+      [
+        {title:'Learn Insurance', desc:'Understand what term insurance is and why you need it', step:2},
+        {title:'Buy Insurance', desc:'Get a personalised plan recommendation and buy today', step:5},
+        {title:'Ask a Question', desc:'Ask me anything about life insurance policies', step:3},
+      ]
+    );
+    await addMsg(card, 'in');
+  }
+
+  else if(step === 2) {
+    await addMsg(makeBubble('<span class="selected-option"><i class="ti ti-check"></i> English</span>', 'out'));
+    await addMsg(makeBubble('<span class="selected-option"><i class="ti ti-check"></i> Learn Insurance</span>', 'out'), 'out', 300);
+    await showTyping(1400);
+    await addMsg(makeBubble('📚 <strong>What is Term Insurance?</strong><br><br>Term insurance is the <strong>simplest and cheapest</strong> form of life insurance.<br><br>You pay a small amount every month (called a <em>premium</em>). In return, if something happens to you during the policy period, your family gets a large sum of money — called the <strong>Sum Assured</strong>.<br><br>Example: For just ₹730/month, your family gets <strong>₹1 Crore</strong> if you pass away. That money helps them pay rent, school fees, loans — and live with dignity. 🙏', 'in'), 'in', 0);
+  }
+
+  else if(step === 3) {
+    await addMsg(makeBubble('<span class="selected-option"><i class="ti ti-check"></i> Learn Insurance</span>', 'out'));
+    await showTyping(1400);
+    await addMsg(makeBubble('📚 <strong>What is Term Insurance?</strong><br><br>Term insurance is the simplest and cheapest form of life insurance. You pay a small monthly premium, and if something happens to you, your family receives a large sum.<br><br>For just ₹730/month → your family gets <strong>₹1 Crore</strong>. 🙏', 'in'), 'in', 0);
+    await showTyping(1000);
+    const card = makeListCard(
+      '💡 What would you like to know next?',
+      'Here are some questions people like you often ask:',
+      [
+        {title:'How much cover do I need?', desc:'Calculate the right sum assured for your family', step:4},
+        {title:'What is CSR?', desc:'Claim Settlement Ratio — why it matters when choosing a plan', step:4},
+        {title:'Can smokers get insurance?', desc:'Yes! But premium may be slightly higher', step:4},
+        {title:'What are riders?', desc:'Add-ons like accident cover, critical illness, waiver of premium', step:4},
+        {title:'Ask another question', desc:'Type your own question for me', step:4},
+      ],
+      'Choose a question'
+    );
+    await addMsg(card, 'in', 0);
+  }
+
+  else if(step === 4) {
+    await addMsg(makeBubble('<span class="selected-option"><i class="ti ti-check"></i> Learn Insurance</span>', 'out'));
+    await addMsg(makeBubble('<span class="selected-option"><i class="ti ti-check"></i> How much cover do I need?</span>', 'out'), 'out', 300);
+    await showTyping(1200);
+    await addMsg(makeBubble('💰 <strong>How much cover do you need?</strong><br><br>A simple rule: your cover should be <strong>10–15× your annual income</strong>.<br><br>• Income ₹10k–₹30k/month → ₹25–50 Lakh cover<br>• Income ₹30k–₹60k/month → ₹50L–1 Crore cover<br>• Income above ₹60k/month → ₹1–2 Crore cover<br><br>Also add your outstanding loans to this amount. 🏠', 'in'), 'in', 0);
+    await showTyping(800);
+    const card = makeListCard(
+      '💡 Next question?',
+      '',
+      [
+        {title:'Which plan is best for me?', desc:'Get a personalised recommendation based on your profile', step:6},
+        {title:'What is free look period?', desc:'14-day window to return the policy if you change your mind', step:4},
+        {title:'What is CSR?', desc:'Claim Settlement Ratio — key to choosing a reliable insurer', step:4},
+        {title:'How is premium paid?', desc:'Monthly or annually — as per your convenience', step:4},
+        {title:'Ask another question', desc:'Type your own question', step:4},
+      ],
+      'Choose a question'
+    );
+    await addMsg(card, 'in', 0);
+  }
+
+  else if(step === 5) {
+    await addMsg(makeBubble('<span class="selected-option"><i class="ti ti-check"></i> Buy Insurance</span>', 'out'));
+    await showTyping(600);
+    await addMsg(makeBubble('Great! I\'ll help you find the best plan. Let me ask you a few quick questions. 📝<br><br><strong>What is your name?</strong>', 'in'), 'in', 0);
+    await addMsg(makeBubble('Ramesh Yadav', 'out'), 'out', 1200);
+    await showTyping(500);
+    await addMsg(makeBubble('Nice to meet you, <strong>Ramesh!</strong> 🙏<br><br><strong>How old are you?</strong>', 'in'), 'in', 0);
+    await addMsg(makeBubble('32', 'out'), 'out', 1200);
+    await showTyping(500);
+    await addMsg(makeBubble('<strong>What is your profession?</strong><br><br>e.g. daily wage worker, auto driver, shop owner, farmer, office employee...', 'in'), 'in', 0);
+    await addMsg(makeBubble('Auto driver', 'out'), 'out', 1200);
+    await showTyping(500);
+    await addMsg(makeBubble('<strong>How many people depend on your income?</strong><br><br>Include spouse, children, parents.', 'in'), 'in', 0);
+    await addMsg(makeBubble('4 — wife, 2 kids, mother', 'out'), 'out', 1200);
+    await showTyping(500);
+    await addMsg(makeBubble('<strong>What is your monthly income?</strong> (approximate is fine)', 'in'), 'in', 0);
+    await addMsg(makeBubble('Around ₹22,000', 'out'), 'out', 1200);
+    await showTyping(500);
+    await addMsg(makeBubble('Almost there! <strong>Do you have any loans?</strong><br><br>Home loan, vehicle loan, personal loan — total outstanding amount?', 'in'), 'in', 0);
+    await addMsg(makeBubble('Vehicle loan — ₹1.5 lakh remaining', 'out'), 'out', 1200);
+    await showTyping(700);
+    await addMsg(makeBubble('✅ Got it! Based on your profile, I\'m calculating the best plans for you...', 'in'), 'in', 0);
+  }
+
+  else if(step === 6) {
+    await addMsg(makeBubble('✅ Based on your profile, here are my <strong>top 3 recommendations</strong> for you, Ramesh:', 'in'), 'in', 0);
+    await showTyping(600);
+    await addMsg(makeBubble('🏆 <strong>Plan 1 — Bajaj Allianz Smart Protect</strong><br>Cover: ₹50 Lakh | Term: 30 years<br>Premium: <strong>₹350/month</strong><br>CSR: 98.48% ✅<br><a href="#">Buy now →</a>', 'in'), 'in', 300);
+    await addMsg(makeBubble('🥈 <strong>Plan 2 — Max Life Smart Secure</strong><br>Cover: ₹50 Lakh | Term: 30 years<br>Premium: <strong>₹370/month</strong><br>CSR: 99.51% ⭐ Highest<br><a href="#">Buy now →</a>', 'in'), 'in', 600);
+    await addMsg(makeBubble('🥉 <strong>Plan 3 — PMJJBY (Govt scheme)</strong><br>Cover: ₹2 Lakh | Term: 1 year (renewable)<br>Premium: <strong>₹36/month</strong><br>CSR: Govt-backed ✅ Very affordable<br><a href="#">Buy now →</a>', 'in'), 'in', 900);
+    await showTyping(800);
+    const card = makeListCard(
+      '🛒 Ready to proceed?',
+      'Would you like to buy one of these plans?',
+      [
+        {title:'Buy Plan 1', desc:'Bajaj Allianz — ₹350/month, best value', step:7},
+        {title:'Buy Plan 2', desc:'Max Life — ₹370/month, highest CSR 99.51%', step:7},
+        {title:'Buy PMJJBY', desc:'Government scheme — only ₹36/month', step:7},
+        {title:'Explain more', desc:'I have questions before deciding', step:3},
+      ],
+      'Choose a plan'
+    );
+    await addMsg(card, 'in', 1200);
+  }
+
+  else if(step === 7) {
+    await addMsg(makeBubble('<span class="selected-option"><i class="ti ti-check"></i> Buy Plan 1 — Bajaj Allianz</span>', 'out'));
+    await showTyping(800);
+    await addMsg(makeBubble('Excellent choice, Ramesh! 🎉<br><br>I\'m connecting you with a <strong>licensed IRDAI agent</strong> who will complete your application. They will:<br><br>• Call you within 24 hours<br>• Help with documents (Aadhaar, income proof)<br>• No extra charges — direct insurer price guaranteed<br><br>Your profile has been shared securely. 🔒', 'in'), 'in', 0);
+    await showTyping(600);
+    await addMsg(makeBubble('📞 <strong>Agent contact:</strong><br>Priya Sharma — IRDAI Lic: 12345678<br>+91 98765 43210<br><br>Or save our number and WhatsApp us anytime. We\'re here 9AM–7PM, Mon–Sat. 🙏', 'in'), 'in', 300);
+  }
+}
+
+function goToStep(step) {
+  clearAndBuild(step);
+}
+
+function resetAll() {
+  clearAndBuild(0);
+}
+
+clearAndBuild(0);
+</script>
