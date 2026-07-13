@@ -305,3 +305,11 @@ header.hero.cs-header{padding:44px 0 0;}
   font-family:var(--font-mono); font-size:0.85em; color:var(--amber);
   background:#1a1f2c; border:1px solid var(--border); border-radius:4px; padding:1px 6px;
 }
+
+.cs-embed-frame{
+  width:100%; max-width:760px; margin:0 auto; border-radius:10px; border:1px solid var(--border);
+  overflow-x:auto; overflow-y:hidden; background:#fff; padding:20px;
+}
+.cs-embed-frame iframe{
+  border:0; width:720px; height:660px; display:block; margin:0 auto;
+}
